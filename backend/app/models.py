@@ -20,7 +20,25 @@ class UserCreate(UserBase):
 
 class UserPublic(UserBase):
     id: int
-    
+
+
+class UserUpdate(UserBase):
+    email: EmailStr | None = Field(default=None, max_length=255)
+    password: str | None = Field(default=None, min_length=8, max_length=40)
+
+
+class UserRegister(SQLModel):
+    email: EmailStr = Field(max_length=255)
+    username: str
+    is_retailer: bool = False
+    password: str = Field(min_length=8, max_length=40)
+    full_name: str | None = Field(default=None, max_length=255)
+
+
+class UserUpdateMe(SQLModel):
+    full_name: str | None = Field(default=None, max_length=255)
+    email: EmailStr | None = Field(default=None, max_length=255)
+
 
 class Token(SQLModel):
     access_token: str
@@ -28,6 +46,6 @@ class Token(SQLModel):
 
 
 class TokenPayload(SQLModel):
-    payload: str
+    sub: str | None = None
 
 
