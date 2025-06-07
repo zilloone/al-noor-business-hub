@@ -20,7 +20,12 @@ class UserCreate(UserBase):
 
 class UserPublic(UserBase):
     id: int
-    
+
+
+class UserUpdate(UserBase):
+    email: EmailStr | None = Field(default=None, max_length=255)
+    password: str | None = Field(default=None, min_length=8, max_length=40)
+
 
 class Token(SQLModel):
     access_token: str
@@ -28,6 +33,6 @@ class Token(SQLModel):
 
 
 class TokenPayload(SQLModel):
-    payload: str
+    sub: str | None = None
 
 
