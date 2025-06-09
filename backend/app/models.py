@@ -40,6 +40,42 @@ class UserUpdateMe(SQLModel):
     email: EmailStr | None = Field(default=None, max_length=255)
 
 
+
+#Products
+
+class ProductBase(SQLModel):
+    name: str
+    description: str = None
+    price: float
+    stock: int
+    image_url: str | None = None
+
+
+class Product(ProductBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+   
+    retailer_id: int = Field(foreign_key="user.id")
+
+
+class ProductCreate(ProductBase):
+    pass
+    
+
+class ProductPublic(ProductBase):
+    id: int
+    retailer_id: int
+
+
+class ProductUpdate(SQLModel):
+    name: str | None = None
+    description: str | None = None
+    price: float | None = None
+    stock: int | None = None
+    image_url: str | None = None
+
+    
+
+
 class Token(SQLModel):
     access_token: str
     token_type: str = "bearer"

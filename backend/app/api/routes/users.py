@@ -59,7 +59,7 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
     """
     Create new user without the need to be logged in.
     """
-    user = crud.get_user_by_email(session=session, email=user_in.email)
+    user = crud.get_user_by_username(session=session, username=user_in.username)
     if user:
         raise HTTPException(
             status_code=400,
