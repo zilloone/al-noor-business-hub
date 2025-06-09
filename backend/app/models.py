@@ -1,6 +1,7 @@
 # app/models.py
 from sqlmodel import SQLModel, Field
 from pydantic import EmailStr
+from datetime import datetime, timezone
 
 
 class UserBase(SQLModel):
@@ -73,7 +74,61 @@ class ProductUpdate(SQLModel):
     stock: int | None = None
     image_url: str | None = None
 
+
+class CartItemBase(SQLModel):
+    quantity: int
+
     
+class CartItemCreate(CartItemBase):
+    product_id: int
+
+
+class CartItemUpdate(SQLModel):
+    quantity: int | None = None
+
+
+class CartItem(CartItemBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int | None = Field(default=None, foreign_key="user.id")
+    product_id: int | None = Field(foreign_key="product.id")
+    
+
+class CartItemPublic(CartItemBase):
+    user_id: int
+    product_id: int
+
+
+class OrderBase(SQLModel):
+    total_price: float
+    created_at: datetime = Field(default_factory=datetime.now(timezone.utc))
+
+
+class Order(OrderBase, table=True):
+    id: int = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    
+
+class OrderPublic(OrderBase):
+    id: int
+
+
+class OrderItemBase(SQLModel):
+    quantity: int
+    unit_price: float
+    product_id: int
+
+
+
+class OrderItem(OrderItemBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    order_id: int = Field(foreign_key="order.id")
+    product_id: int = Field(foreign_key="product.id")
+    
+    
+class OrderItemPublic(OrderItemBase):
+   pass
+
+
 
 
 class Token(SQLModel):
